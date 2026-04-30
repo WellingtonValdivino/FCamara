@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using TaskManagement.Application.DTOs;
+using TaskManagement.Application.DTOs.Request;
+using TaskManagement.Application.DTOs.Response;
 using TaskManagement.Application.Interfaces;
 
 namespace TaskManagement.Controllers;
@@ -46,10 +47,7 @@ public class TasksController : ControllerBase
     {
         var task = await _taskService.CreateAsync(request);
 
-        return CreatedAtAction(
-            nameof(GetById),
-            new { id = task.Id },
-            task);
+        return CreatedAtAction(nameof(GetById), new { id = task.Id }, task);
     }
 
     /// <summary>

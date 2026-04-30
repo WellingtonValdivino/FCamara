@@ -1,11 +1,20 @@
 ﻿using FluentValidation;
-using TaskManagement.Application.DTOs;
+using TaskManagement.Application.DTOs.Request;
 using TaskManagement.Domain.Enums;
 
 namespace TaskManagement.Application.Validators;
 
+/// <summary>
+/// Validador para a requisição de atualização de tarefa, garantindo que os dados fornecidos estejam corretos e completos antes de serem processados.
+/// </summary>
 public class UpdateTaskRequestValidator : AbstractValidator<UpdateTaskRequest>
 {
+    /// <summary>
+    /// Fornece regras de validação para atualizar uma solicitação de tarefa.
+    /// </summary>
+    /// <remarks>Este validador impõe restrições aos campos de título, descrição, status e data de vencimento para garantir que as solicitações de
+    /// atualização atendam às regras de negócio necessárias. As falhas de validação incluirão mensagens de erro descritivas para cada campo inválido.
+    /// </remarks>
     public UpdateTaskRequestValidator()
     {
         RuleFor(x => x.Title)
