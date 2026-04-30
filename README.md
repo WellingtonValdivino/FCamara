@@ -1,34 +1,67 @@
 # Task Management API
 
 ## Objetivo
-API REST para gerenciamento simples de tarefas.
 
-## Tecnologias
-- .NET 8 ou .NET 6
+API REST para gerenciamento simples de tarefas, permitindo criação, consulta, atualização e remoção de tarefas.
+
+---
+
+## Tecnologias utilizadas
+
+- .NET 8 (ou .NET 6+)
 - ASP.NET Core Web API
-- Entity Framework Core InMemory
+- Entity Framework Core (InMemory)
 - Swagger
 - xUnit
+- FluentValidation
 - Dependency Injection
-- Logging
+- Logging (ILogger)
 
-## Arquitetura escolhida
-Explicar camadas: API, Application, Domain, Infrastructure.
+---
 
-## Como rodar
+## Arquitetura
+
+A aplicação foi estruturada seguindo separação de responsabilidades:
+
+- **API** → Controllers responsáveis pela comunicação HTTP
+- **Application** → Services, DTOs e regras de aplicação
+- **Domain** → Entidades e enums
+- **Infrastructure** → Persistência de dados (EF Core) e repositórios
+
+Essa abordagem facilita manutenção, testes e escalabilidade, além de aplicar princípios do SOLID.
+
+---
+
+## Como rodar o projeto
+
+```bash
 dotnet restore
 dotnet build
-dotnet run --project TaskManagement.Api
+dotnet run
+```
 
-## Swagger
-https://localhost:xxxx/swagger
+---
 
-## Como testar
+## Após subir a aplicação, acesse:
+
+```bash
+http://localhost:5177/swagger
+```
+
+---
+
+## Como executar os testes
+
+```bash
 dotnet test
+```
+
+---
 
 ## Endpoints
-POST /api/tasks
-GET /api/tasks
-GET /api/tasks/{id}
-PUT /api/tasks/{id}
-DELETE /api/tasks/{id}
+
+- **POST /api/tasks** → Criar tarefa
+- **GET /api/tasks** → Listar tarefas (com filtros)
+- **GET /api/tasks/{id}** → Buscar tarefa por ID
+- **PUT /api/tasks/{id}** → Atualizar tarefa
+- **DELETE /api/tasks/{id}** → Remover tarefa
