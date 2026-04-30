@@ -13,14 +13,17 @@ namespace TaskManagement.Application.Services;
 public class TaskService : ITaskService
 {
     private readonly ITaskRepository _repository;
+    private readonly ILogger<TaskService> _logger;
 
     /// <summary>
     /// Construtor do serviço de tarefas que recebe um repositório de tarefas como dependência.
     /// </summary>
     /// <param name="repository"></param>
-    public TaskService(ITaskRepository repository)
+    /// <param name="logger"></param>
+    public TaskService(ITaskRepository repository, ILogger<TaskService> logger)
     {
         _repository = repository;
+        _logger = logger;
     }
 
     /// <summary>
@@ -41,6 +44,8 @@ public class TaskService : ITaskService
             CreatedAt = DateTime.UtcNow
         };
 
+        _logger.LogInformation("Criada nova tarefa com ID {TaskId}", task.Id);
+
         await _repository.AddAsync(task);
 
         return MapToResponse(task);
@@ -55,6 +60,8 @@ public class TaskService : ITaskService
     public async Task<List<TaskResponse>> GetAllAsync(TaskFilterRequest filter)
     {
         var tasks = await _repository.GetAllAsync(filter);
+
+        _logger.LogInformation("Recuperadas {TaskCount} tarefas", tasks.Count);
 
         return tasks
             .Select(MapToResponse)
@@ -71,8 +78,12 @@ public class TaskService : ITaskService
         var task = await _repository.GetByIdAsync(id);
 
         if (task is null)
+        {
+            _logger.LogWarning("Tarefa com ID {TaskId} não encontrada", id);
             return null;
+        }
 
+        _logger.LogInformation("Tarefa com ID {TaskId} recuperada com sucesso", id);
         return MapToResponse(task);
     }
 
@@ -87,19 +98,23 @@ public class TaskService : ITaskService
         var task = await _repository.GetByIdAsync(id);
 
         if (task is null)
+        {
+            _logger.LogWarning("Tarefa com ID {TaskId} não encontrada para atualização", id);
             return false;
-
+        }
         task.Title = request.Title;
         task.Description = request.Description;
         task.DueDate = request.DueDate;
         task.Status = request.Status;
         task.UpdatedAt = DateTime.UtcNow;
 
+        _logger.LogInformation("Tarefa com ID {TaskId} atualizada com sucesso", id);
+
         await _repository.UpdateAsync(task);
 
         return true;
     }
-    
+
     /// <summary>
     /// Remove uma tarefa existente.
     /// </summary>
@@ -110,9 +125,14 @@ public class TaskService : ITaskService
         var task = await _repository.GetByIdAsync(id);
 
         if (task is null)
+        {
+            _logger.LogWarning("Tarefa com ID {TaskId} não encontrada para remoção", id);
             return false;
+        }
 
         await _repository.DeleteAsync(task);
+
+        _logger.LogInformation("Tarefa com ID {TaskId} removida com sucesso", id);
 
         return true;
     }
